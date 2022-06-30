@@ -3,7 +3,9 @@ A toy example of a  social network illustrating the power of Neo4j’s graph alg
 
 ## Input:
 
-Enter whether you want to add person (with random name) to social network.
+Choose from options as shown in the screenshot of the menu:
+
+![Alt text](./images/menu.JPG)
 
 ## Methodology:
 
