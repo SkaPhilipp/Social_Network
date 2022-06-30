@@ -1,172 +1,106 @@
-import names
 
-from neo4j import GraphDatabase
+import network_graph_database as graph
 
-import logging
+from os import system, name
+from time import sleep
 
-from neo4j.exceptions import ServiceUnavailable
 
 
-# Define App class
-class App:
 
-    # Initialise graph database using neo4j api credentials
-    def __init__(self, uri, user, password):
-        self.driver = GraphDatabase.driver(uri, auth=(user, password))
+# Display menu with options to choose from
+def display_menu():
+    menu_width = 75
+    blank_line = "*" + " "*(menu_width-2) + "*"
+    row_of_stars = "*"*menu_width
+    indent = " "*10
 
-    # Close driver connection
-    def close(self):
-        self.driver.close()
+    # Adjust string to menu width
+    def string_wrapping(input_string):
+        return ("*" + indent + input_string + " "*(menu_width-2))[:menu_width-1] + "*"
 
-    # Create new Person vertex with random name
-    def create_person(self):
-        with self.driver.session() as session:
-            person_name = names.get_full_name()
-            result = session.write_transaction(self._create_person, person_name)
+    # Print menu options
+    print(row_of_stars)
+    print(blank_line)
+    print(string_wrapping("Enter option to choose:"))
+    print(blank_line)
+    print(string_wrapping("1: Display graph"))
+    print(string_wrapping("2: Add Person (with random name)"))
+    print(string_wrapping("3: Check popularity of person"))
+    print(string_wrapping("4: Check likelihood of new relationship forming"))
+    print(string_wrapping("5: Clear graph"))
+    print(string_wrapping("0: Exit"))
+    print(blank_line)
+    print(row_of_stars)
+    print()
 
-            # Print that person vertex successful created
-            for row in result:
-                print(row)
-                print("Created person: {p}".format(p = row['person']))
 
-    # Static method to create person vertex and return result
-    @staticmethod
-    def _create_person(tx, person_name):
-        query = "CREATE (p:Person{name: '"+ person_name +"'}) RETURN p AS person"
-        result = tx.run(query, person_name=person_name)
-        for row in result:
-            print(row)
-        #return [row[""] for row in result]
+# Clear screen
+def clear_screen():
+    time_before_clearing = 2
+    sleep(time_before_clearing)
 
+    # Clear screen depending on operating system
+    if name == 'nt':
+        _ = system('cls')
+    else:
+        _ = system('clear')
 
+def clear_graph():
+    app.clear_graph_database()
+    print("Graph Database is empty. Time to start from scratch :-)")
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-    def create_friendship(self, person1_name, person2_name):
-
-        with self.driver.session() as session:
-
-            # Write transactions allow the driver to handle retries and transient errors
-
-            result = session.write_transaction(
-
-                self._create_and_return_friendship, person1_name, person2_name)
-
-            for row in result:
-
-                print("Created friendship between: {p1}, {p2}".format(p1=row['p1'], p2=row['p2']))
-
-
-
-
-
-
-
-
-
-    @staticmethod
-
-    def _create_and_return_friendship(tx, person1_name, person2_name):
-
-        # To learn more about the Cypher syntax, see https://neo4j.com/docs/cypher-manual/current/
-
-        # The Reference Card is also a good resource for keywords https://neo4j.com/docs/cypher-refcard/current/
-
-        query = (
-
-            "CREATE (p1:Person { name: $person1_name }) "
-
-            "CREATE (p2:Person { name: $person2_name }) "
-
-            "CREATE (p1)-[:KNOWS]->(p2) "
-
-            "RETURN p1, p2"
-
-        )
-
-        result = tx.run(query, person1_name=person1_name, person2_name=person2_name)
-
-        try:
-
-            return [{"p1": row["p1"]["name"], "p2": row["p2"]["name"]}
-
-                    for row in result]
-
-        # Capture any errors along with the query and data for traceability
-
-        except ServiceUnavailable as exception:
-
-            logging.error("{query} raised an error: \n {exception}".format(
-
-                query=query, exception=exception))
-
-            raise
-
-
-    def find_person(self, person_name):
-
-        with self.driver.session() as session:
-
-            result = session.read_transaction(self._find_and_return_person, person_name)
-
-            for row in result:
-
-                print("Found person: {row}".format(row=row))
-
-
-    @staticmethod
-
-    def _find_and_return_person(tx, person_name):
-
-        query = (
-
-            "MATCH (p:Person) "
-
-            "WHERE p.name = $person_name "
-
-            "RETURN p.name AS name"
-
-        )
-
-        result = tx.run(query, person_name=person_name)
-
-        return [row["name"] for row in result]
-
-
-
+# Main function
 if __name__ == "__main__":
 
-    # Aura queries use an encrypted connection using the "neo4j+s" URI scheme
-
-  
     # Local bolt and http port, etc:
     local_bolt = '<neo4j-local-bolt>'
     local_http = '<neo4j-local-http>'
     local_pw = '<neo4j-pw>'
     local_user = "neo4j"
 
-    app = App(local_bolt, local_user, local_pw)
+    # Create graph database instance
+    app = graph.App(local_bolt, local_user, local_pw)
 
-    person_to_find = ""
 
-    for _ in range(5):
-        app.create_person()
+    # Start menu to select options 
+    option = -1
+    
+    while option != 0:
 
-    app.find_person(person_to_find)
+        # Allowed options
+        possible_options = range(6)
 
-    app.find_person("Eric")
+        # Display menu3
+        display_menu()
+
+        prompt = "Please enter option: "
+
+        option = input(prompt)
+        print()
+
+        # Only allow valid options
+        try:
+            option = int(option)
+            if not(option in possible_options):
+                print("Please select a valid option")
+        except:
+            print("Please select a valid option")
+
+       
+       # Execute selected option
+        if option == 5:
+            clear_graph()
+
+
+
+
+
+        # Wait and clear screen
+        clear_screen()
+
 
     app.close()
 
