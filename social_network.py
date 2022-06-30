@@ -90,7 +90,22 @@ if __name__ == "__main__":
             print("Please select a valid option")
 
        
-       # Execute selected option
+        # Execute selected option
+
+        # Display graph
+        if option == 1:
+            print("Cannot display your graph yet")
+
+        # Add new person node
+        if option == 2:
+            person_name = app.create_person()
+            print("New person node for '" + person_name + "' has been created.")
+            print()
+            print("Relationships to existing nodes created at random.")
+            # Give extra time to read printed output
+            sleep(2)
+
+        # Clear graph
         if option == 5:
             clear_graph()
 
@@ -103,5 +118,3 @@ if __name__ == "__main__":
 
 
     app.close()
-
-    
