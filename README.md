@@ -1,5 +1,5 @@
 # Social_Network
-This project represents an app using a toy example of a social network illustrating the power of Neo4j’s graph algorithms
+This project represents an app using a toy example of a social network which illustrates the power of Neo4j’s graph algorithms
 
 ## Input:
 
