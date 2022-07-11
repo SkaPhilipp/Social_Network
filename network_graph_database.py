@@ -12,13 +12,17 @@ import logging
 
 
 
+
+
 # Define App class
 class App:
 
     # Initialise graph database using neo4j api credentials
     def __init__(self, uri, user, password):
-        self.driver = GraphDatabase.driver(uri, auth=(user, password))
-
+        try:
+            self.driver = GraphDatabase.driver(uri, auth=(user, password))
+        except Exception as e:
+            print("Connection to Driver failed: ", e)
 
 
     # Close driver connection
@@ -56,10 +60,10 @@ class App:
         query = "CREATE (p:Person{name: '"+ person_name +"'}) RETURN p AS person"
         result = tx.run(query, person_name=person_name)
 
-    # Create relationships from new person to existing at random (with 50% likelihood)
+    # Create relationships from new person to existing at random (with 50% likelihood), set property 'weight' to 1 for visualisation
     @staticmethod
     def _create_relationships(tx, person_name):
-        query = "MATCH (p:Person{name: '" + person_name + "'}),(o:Person) WHERE NOT(id(p)=id(o)) WITH p,o WHERE rand()<0.5 CREATE (p)-[:KNOWS]->(o), (p)<-[:KNOWS]-(o)"
+        query = "MATCH (p:Person{name: '" + person_name + "'}),(o:Person) WHERE NOT(id(p)=id(o)) WITH p,o WHERE rand()<0.5 CREATE (p)-[:KNOWS {weight: 1}]->(o), (p)<-[:KNOWS {weight: 1}]-(o)"
         result = tx.run(query, person_name=person_name)
 
 
@@ -70,7 +74,7 @@ class App:
         with self.driver.session() as session:
             
             # Query to perform common neighbors algorithm
-            query = " MATCH (p1:Person), (p2:Person) WHERE id(p1)<id(p2) WITH p1.name AS first, p2.name AS second, gds.alpha.linkprediction.commonNeighbors(p1, p2, {relationshipQuery: 'KNOWS'}) AS score RETURN first, second, score"
+            query = " MATCH (p1:Person), (p2:Person) WHERE id(p1)<id(p2) AND NOT (p1)-[:KNOWS]-(p2) WITH p1.name AS first, p2.name AS second, gds.alpha.linkprediction.commonNeighbors(p1, p2, {relationshipQuery: 'KNOWS'}) AS score RETURN first, second, score"
 
             # Execute query
             result = session.run(query)
