@@ -1,8 +1,9 @@
-
 import network_graph_database as graph
 
 from os import system, name
 from time import sleep
+
+import webbrowser
 
 
 
@@ -55,6 +56,14 @@ def clear_graph():
 # Main function
 if __name__ == "__main__":
 
+    # Aura queries use an encrypted connection using the "neo4j+s" URI scheme
+
+    '''
+    uri = "neo4j+s://4443832c.databases.neo4j.io"
+    user = "neo4j"
+    password = "8cjeRzg1NyMiwoG7_Kvyh_9SyfTJXLX_Wiz7XyAbdng"
+    '''
+
     # Local bolt and http port, etc:
     local_bolt = '<neo4j-local-bolt>'
     local_http = '<neo4j-local-http>'
@@ -92,9 +101,12 @@ if __name__ == "__main__":
        
         # Execute selected option
 
-        # Display graph
+        # Display graph in web broswer
         if option == 1:
-            print("Cannot display your graph yet")
+            try:
+                webbrowser.open_new_tab('display_graph.html')
+            except:
+                print("Problem displaying graph in web browser")
 
         # Add new person node
         if option == 2:
@@ -104,6 +116,42 @@ if __name__ == "__main__":
             print("Relationships to existing nodes created at random.")
             # Give extra time to read printed output
             sleep(2)
+
+
+        # Display popularity of people using PageRank scores
+        if option == 3:
+            print("Displaying popularity score not available yet")
+
+
+        # Perform common neighbor algorithm to indicate likelihood of new relationship between nodes forming based on how many neighbors they have in common
+        if option == 4:
+            
+            # Perform query and display result
+            result_list = app.common_neighbors()
+
+            heading = "Score indicating chance for new relationship forming based on common neighbors"
+            print(heading)
+            print()
+            print("-"*len(heading))
+            print()
+            
+            for result_dictionary in result_list:
+                print("Score: " + str(result_dictionary['score']) + " for '" + result_dictionary['first'] + "' ---- '" + result_dictionary['second'] + "'")
+            
+            
+            # Display result until user goes back to main menu4
+            print()
+            back_to_menu = ""
+
+            while back_to_menu != "x":
+                back_prompt = "Enter 'x' to return to menu: "
+                back_to_menu = input(back_prompt)
+
+                if back_to_menu != "x":
+                    print()
+                    print("Invalid input. Please enter 'x' to return to menu")
+                    sleep(2)
+
 
         # Clear graph
         if option == 5:
@@ -118,3 +166,5 @@ if __name__ == "__main__":
 
 
     app.close()
+
+    
