@@ -61,7 +61,7 @@ if __name__ == "__main__":
     local_bolt = '<neo4j-local-bolt>'
     local_http = '<neo4j-local-http>'
     local_pw = '<neo4j-pw>'
-    local_user = "neo4j"
+    local_user = '<neo4j-user>'
 
     # Create graph database instance
     app = graph.App(local_bolt, local_user, local_pw)
