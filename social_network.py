@@ -56,13 +56,6 @@ def clear_graph():
 # Main function
 if __name__ == "__main__":
 
-    # Aura queries use an encrypted connection using the "neo4j+s" URI scheme
-
-    '''
-    uri = "neo4j+s://4443832c.databases.neo4j.io"
-    user = "neo4j"
-    password = "8cjeRzg1NyMiwoG7_Kvyh_9SyfTJXLX_Wiz7XyAbdng"
-    '''
 
     # Local bolt and http port, etc:
     local_bolt = '<neo4j-local-bolt>'
