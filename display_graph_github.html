@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <title>Social Network</title>
+        <style type="text/css">
+            #viz {
+                width: 900px;
+                height: 700px;
+            }
+        </style>
+        <script src="https://unpkg.com/neovis.js@2.0.2"></script>
+    </head>   
+    <script>
+        function draw() {
+                var config = {
+                    containerId: "viz",
+                    neo4j: {
+                        serverUrl: '<neo4j-local-bolt>',
+                        serverUser: '<neo4j-user>',
+                        serverPassword: '<neo4j-pw>'
+                    },
+                    labels: {
+                        Person: {
+                            label: "name"
+                        }
+                    },
+                    relationships: {
+                        KNOWS: {
+                            value: "weight"
+                        }
+                    },
+                    initialCypher: "MATCH (n)-[r:KNOWS]->(m) RETURN n,r,m"
+                };
+
+            var viz = new NeoVis.default(config);
+            viz.render();
+            console.log(viz);
+        }
+    </script>
+    <body onload="draw()">
+        <div id="viz"></div>
+    </body>
+</html>
