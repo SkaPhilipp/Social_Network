@@ -15,7 +15,7 @@ Person containing property 'name' generated at random will be added as node to g
 
 ## Output:
 
-- Display the graph in Browser
+- Display the graph in browser
 - PageRank score for requested person node to reflect that person's popularity
 - Shorthest path between two people to show how they are related within the social network
 - Likelyhood of relationship between two people being established based on link prediction algorithm
