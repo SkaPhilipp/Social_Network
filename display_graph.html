@@ -1,3 +1,6 @@
+<!-- This is a html file using neovis.js to display graph database -->
+<!-- For detailed information see https://neo4j.com/developer-blog/graph-visualization-with-neo4j-using-neovis-js/ -->
+
 <html>
     <head>
         <title>Social Network</title>
@@ -8,7 +11,8 @@
             }
         </style>
         <script src="https://unpkg.com/neovis.js@2.0.2"></script>
-    </head>   
+    </head>
+    <!-- Javascript to facilitate visualisation of graph database -->   
     <script>
         function draw() {
                 var config = {
@@ -18,16 +22,19 @@
                         serverUser: '<neo4j-user>',
                         serverPassword: '<neo4j-pw>'
                     },
+                    // Specify node labels of graph databse to display
                     labels: {
                         Person: {
                             label: "name"
                         }
                     },
+                    // Specify relationships of graph database to display
                     relationships: {
                         KNOWS: {
                             value: "weight"
                         }
                     },
+                    // Specify cypher query which returns graph pattern that will be displayed
                     initialCypher: "MATCH (n)-[r:KNOWS]->(m) RETURN n,r,m"
                 };
 
