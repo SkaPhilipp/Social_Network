@@ -3,6 +3,9 @@ import network_graph_database as graph
 from os import system, name
 from time import sleep
 
+import random
+import string
+
 import webbrowser
 
 
@@ -46,6 +49,23 @@ def clear_screen():
     else:
         _ = system('clear')
 
+
+# Display result until user gets back to main menu
+def get_back_to_menu():
+    print()
+    back_to_menu = ""
+
+    while back_to_menu != "x":
+        back_prompt = "Enter 'x' to return to menu: "
+        back_to_menu = input(back_prompt)
+
+        if back_to_menu != "x":
+            print()
+            print("Invalid input. Please enter 'x' to return to menu")
+            sleep(2)
+
+
+# Clear Graph Database
 def clear_graph():
     app.clear_graph_database()
     print("Graph Database is empty. Time to start from scratch :-)")
@@ -75,7 +95,7 @@ if __name__ == "__main__":
         # Allowed options
         possible_options = range(6)
 
-        # Display menu3
+        # Display menu
         display_menu()
 
         prompt = "Please enter option: "
@@ -113,7 +133,20 @@ if __name__ == "__main__":
 
         # Display popularity of people using PageRank scores
         if option == 3:
-            print("Displaying popularity score not available yet")
+            try:
+                random_string = ''.join(random.choice(string.ascii_lowercase) for _ in range(10))
+                result_dicts = app.perform_page_rank(random_string) # method needs arbitrary graph name string for projection used in PageRank algorithm and cannot use same string twice as it would yield old result
+
+            except:
+                print("Problem displaying popularity of people (performing PageRank algorithm)")
+
+            for result_dict in result_dicts:
+                print(f"Popularity: {round(result_dict['score'],3)} -- Name: {result_dict['name']}")
+            
+            # Display result until user goes back to main menu
+            get_back_to_menu()
+
+
 
 
         # Perform common neighbor algorithm to indicate likelihood of new relationship between nodes forming based on how many neighbors they have in common
@@ -132,18 +165,8 @@ if __name__ == "__main__":
                 print("Score: " + str(result_dictionary['score']) + " for '" + result_dictionary['first'] + "' ---- '" + result_dictionary['second'] + "'")
             
             
-            # Display result until user goes back to main menu4
-            print()
-            back_to_menu = ""
-
-            while back_to_menu != "x":
-                back_prompt = "Enter 'x' to return to menu: "
-                back_to_menu = input(back_prompt)
-
-                if back_to_menu != "x":
-                    print()
-                    print("Invalid input. Please enter 'x' to return to menu")
-                    sleep(2)
+            # Display result until user goes back to main menu
+            get_back_to_menu()
 
 
         # Clear graph
@@ -161,3 +184,5 @@ if __name__ == "__main__":
     app.close()
 
     
+
+
