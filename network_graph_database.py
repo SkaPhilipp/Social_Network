@@ -7,9 +7,6 @@ from time import sleep
 
 import names
 
-import logging
-
-
 
 
 
@@ -37,7 +34,7 @@ class App:
 
 
 
-    # Create new Person vertex with random name
+    # Create new Person node with random name
     def create_person(self):
         with self.driver.session() as session:
             
@@ -54,7 +51,7 @@ class App:
             return person_name
 
 
-    # Static method to create person vertex and return result
+    # Static method to create person node and return result
     @staticmethod
     def _create_person(tx, person_name):
         query = "CREATE (p:Person{name: '"+ person_name +"'}) RETURN p AS person"
@@ -74,10 +71,24 @@ class App:
         with self.driver.session() as session:
             
             # Query to perform common neighbors algorithm
-            query = " MATCH (p1:Person), (p2:Person) WHERE id(p1)<id(p2) AND NOT (p1)-[:KNOWS]-(p2) WITH p1.name AS first, p2.name AS second, gds.alpha.linkprediction.commonNeighbors(p1, p2, {relationshipQuery: 'KNOWS'}) AS score RETURN first, second, score"
+            query = "MATCH (p1:Person), (p2:Person) WHERE id(p1)<id(p2) AND NOT (p1)-[:KNOWS]-(p2) WITH p1.name AS first, p2.name AS second, gds.alpha.linkprediction.commonNeighbors(p1, p2, {relationshipQuery: 'KNOWS'}) AS score RETURN first, second, score"
 
             # Execute query
             result = session.run(query)
 
             # Return result
             return [dict(res) for res in result]
+
+    # Perform PageRank algorithm
+    def perform_page_rank(self, graph_name):
+
+        # Define projection (which nodes and which relationships / property value) for PageRank algorithm 
+        projection = "CALL gds.graph.project('"+ graph_name +"','Person','KNOWS',{relationshipProperties: 'weight'})"
+        with self.driver.session() as session:
+            session.run(projection)
+
+        # Perform cypher query to execute PageRank algorithm
+        page_rank_query = "CALL gds.pageRank.stream('"+ graph_name +"') YIELD nodeId, score RETURN gds.util.asNode(nodeId).name AS name, score ORDER BY score DESC, name ASC"
+        with self.driver.session() as session:
+            result = session.run(page_rank_query)
+            return [dict(i) for i in result]
