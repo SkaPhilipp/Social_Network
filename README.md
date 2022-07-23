@@ -3,7 +3,7 @@ This project represents an app using a toy example of a social network stored as
 
 ## Input:
 
-Starting the app presents the user a menu with options to choose from as seen in the following screenshot.
+Starting the app presents the user a menu with several options to choose from as seen in the following screenshot.
 
 ![Alt text](./images/menu.JPG)
 
