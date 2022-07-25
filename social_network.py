@@ -31,10 +31,18 @@ def display_menu():
     print(string_wrapping("2: Add Person (with random name)"))
     print(string_wrapping("3: Check popularity of person"))
     print(string_wrapping("4: Check likelihood of new relationship forming"))
-    print(string_wrapping("5: Clear graph"))
+    print(string_wrapping("5: Show degree of separation between two people"))
+    print(string_wrapping("6: Clear graph"))
     print(string_wrapping("0: Exit"))
     print(blank_line)
     print(row_of_stars)
+    print()
+
+# Display heading (used before listing results)
+def display_heading(heading):
+    print(heading)
+    print()
+    print("-"*len(heading))
     print()
 
 
@@ -93,7 +101,7 @@ if __name__ == "__main__":
     while option != 0:
 
         # Allowed options
-        possible_options = range(6)
+        possible_options = range(7)
 
         # Display menu
         display_menu()
@@ -141,7 +149,8 @@ if __name__ == "__main__":
                 print("Problem displaying popularity of people (performing PageRank algorithm)")
 
             for result_dict in result_dicts:
-                print(f"Popularity: {round(result_dict['score'],3)} -- Name: {result_dict['name']}")
+                score = str(int(round(result_dict['score'],3)*1000)).rjust(5, " ")
+                print(f"Popularity score: {score} -- Name: {result_dict['name']}")
             
             # Display result until user goes back to main menu
             get_back_to_menu()
@@ -153,15 +162,13 @@ if __name__ == "__main__":
         if option == 4:
             
             # Perform query and display result
-            result_list = app.common_neighbors()
+            result_dictionaries = app.common_neighbors()
 
+            # Display heading before listing results
             heading = "Score indicating chance for new relationship forming based on common neighbors"
-            print(heading)
-            print()
-            print("-"*len(heading))
-            print()
+            display_heading(heading)
             
-            for result_dictionary in result_list:
+            for result_dictionary in result_dictionaries:
                 print("Score: " + str(result_dictionary['score']) + " for '" + result_dictionary['first'] + "' ---- '" + result_dictionary['second'] + "'")
             
             
@@ -169,8 +176,75 @@ if __name__ == "__main__":
             get_back_to_menu()
 
 
-        # Clear graph
+        # Show degree of separation between two people using shortest path algorithm
+
         if option == 5:
+            
+            # Perform query to return names of all Person nodes
+            result_dictionaries = app.return_all_names()
+
+            # Display heading before listing results and store names
+            name_set = set()
+
+            heading = "List of people in social network"
+            display_heading(heading)
+
+            for count, result_dictionary in enumerate(result_dictionaries):
+                print(("  " + str(count + 1))[-3:] + ": " + result_dictionary['name'])
+                name_set.add(result_dictionary['name'])
+
+
+            # Enter two names for shortest path / degree of separation query
+            print()
+            print("Please enter two names to display degree of separation between them")
+            print()
+            
+            # Prompt user to enter first name
+            prompt_1 = "Please enter first name (or 'x' to return to main menu): "
+            first_name = input(prompt_1)
+
+            while first_name != "x" and not(first_name in name_set):
+                prompt_1 = "Invalid input, please enter first name (or 'x' to return to main menu): "
+                first_name = input(prompt_1)
+            
+            # Prompt user to enter second name (different from first name)
+            if first_name != "x":
+
+                prompt_2 = "Please enter second name (or 'x' to return to main menu): "
+                second_name = input(prompt_2)
+
+                while (second_name != "x" and not(second_name in name_set)) or second_name == first_name :
+                    
+                    if second_name == first_name:
+                        prompt_2 = "Please select different choice for second name than first name (or 'x' to return to main menu): "
+                        second_name = input(prompt_2)
+                    else:
+                        prompt_2 = "Invalid input, please enter second name (or 'x' to return to main menu): "
+                        second_name = input(prompt_2)
+                
+
+            # If user did not choose to return to main menu so far then clear screen and display result until user goes back to main menu
+            if first_name != "x" and second_name != "x":
+                
+                name_set = app.return_shortest_path(first_name, second_name)
+
+                # Clear screen before displaying names
+                clear_screen()
+
+                heading = "Shortest path between " + first_name + " and " + second_name + "illustrating degree of separation." 
+                display_heading(heading)
+
+                for count, name in enumerate(name_set):
+                    counter = str(count+1).rjust(2, " ")
+                    print(f"{counter}: {name}")
+                    print()
+
+                # Display result until user goes back to main menu
+                get_back_to_menu() 
+
+
+        # Clear graph
+        if option == 6:
             clear_graph()
 
 
@@ -180,9 +254,6 @@ if __name__ == "__main__":
         # Wait and clear screen
         clear_screen()
 
-
+    # Close connection to driver
     app.close()
-
-    
-
 
