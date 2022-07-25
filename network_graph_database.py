@@ -2,9 +2,6 @@
 from neo4j import GraphDatabase
 from neo4j.exceptions import ServiceUnavailable
 
-from os import system, name
-from time import sleep
-
 import names
 
 
@@ -41,7 +38,7 @@ class App:
             # Get random name
             person_name = names.get_full_name()
             
-            # Create person vertex
+            # Create person node
             session.write_transaction(self._create_person, person_name)
             
             # Create relationships from new person to existing
@@ -92,3 +89,30 @@ class App:
         with self.driver.session() as session:
             result = session.run(page_rank_query)
             return [dict(i) for i in result]
+
+
+    # Return names of all people in network
+    def return_all_names(self):
+        return_all_names_query = "MATCH (p:Person) RETURN p.name AS name"
+        
+        # Perform query to return all names
+        with self.driver.session() as session:
+            result = session.run(return_all_names_query)
+            return [dict(i) for i in result]
+
+
+    # Return nodes along shortest path between two nodes
+    def return_shortest_path(self, first_person, second_person):
+        
+        shortest_path_query = "MATCH (p1:Person{name: '" + first_person + "'}), (p2:Person{name: '" + second_person + "'}), path = allShortestPaths((p1)-[*]-(p2)) WITH nodes(path) AS nodes_list UNWIND nodes_list AS nodes RETURN nodes.name AS name"
+        
+        # Perform query to return names along shortest path between first_person and second_person
+        with self.driver.session() as session:
+            result = session.run(shortest_path_query)
+
+            # Store names in set and return set
+            name_set = set()
+
+            for res in result:
+                name_set.add(dict(res)['name'])
+            return name_set
