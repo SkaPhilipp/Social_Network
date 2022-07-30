@@ -5,7 +5,7 @@ This project represents an app that uses a toy example of a social network store
 
 When starting the app the user is presented with a menu with several options to choose from as seen in the following screenshot.
 
-![Alt text](./images/menu.JPG)
+![Alt text](./images/user_menu.JPG)
 
 ## Methodology:
 
