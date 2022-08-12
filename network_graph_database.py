@@ -23,7 +23,7 @@ class App:
     def close(self):
         self.driver.close()
 
-    # Clear graph database: delete all nodes and relationships
+    # Clear graph database: delete all nodes and all relationships
     def clear_graph_database(self):
         with self.driver.session() as session:
             query = "MATCH (n) DETACH DELETE n"
