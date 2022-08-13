@@ -73,7 +73,7 @@ def get_back_to_menu():
             sleep(2)
 
 
-# Clear Graph Database
+# Clear Graph Database (delete all nodes and edges)
 def clear_graph():
     app.clear_graph_database()
     print("Graph Database is empty. Time to start from scratch :-)")
