@@ -1,5 +1,5 @@
 # Social_Network
-This project represents an app that uses a toy example of a social network stored as a graph database which illustrates the power of Neo4j’s graph algorithms and graph data science tools
+This project represents an app that makes use of a toy example of a social network stored as a graph database which illustrates the power of Neo4j’s graph algorithms and graph data science tools
 
 ## Input:
 
