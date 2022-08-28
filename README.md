@@ -9,7 +9,7 @@ When starting the app the user is presented with a menu with several options to 
 
 ## Methodology:
 
-A person node containing the property 'name' will be generated at random and will be added to the graph database and relationships to existing person nodes are created at random with equal likelihood.
+A person node containing the property 'name' will be generated at random and this node will be added to the graph database and relationships to existing person nodes are created at random with equal likelihood.
 
 ![Alt text](./images/example_network.JPG)
 
