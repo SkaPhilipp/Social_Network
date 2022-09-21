@@ -11,7 +11,7 @@ import webbrowser
 
 
 
-# Display main menu with options for user to choose from
+# Display main menu with options for the user to choose from
 def display_menu():
     menu_width = 75
     blank_line = "*" + " "*(menu_width-2) + "*"
