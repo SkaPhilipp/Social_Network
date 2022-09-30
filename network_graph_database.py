@@ -11,7 +11,7 @@ import names
 # Define the App class 
 class App:
 
-    # Initialise graph database using neo4j api credentials
+    # Initialise graph database using neo4j api credentials 
     def __init__(self, uri, user, password):
         try:
             self.driver = GraphDatabase.driver(uri, auth=(user, password))
