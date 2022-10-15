@@ -8,7 +8,7 @@ import names
 
 
 
-# Define the App class 
+# Define the App class
 class App:
 
     # Initialise graph database using neo4j api credentials 
