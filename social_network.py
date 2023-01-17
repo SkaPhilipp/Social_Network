@@ -18,7 +18,7 @@ def display_menu():
     row_of_stars = "*"*menu_width
     indent = " "*10
 
-    # Adjust string to menu width 
+    # Adjust string to menu width
     def string_wrapping(input_string):
         return ("*" + indent + input_string + " "*(menu_width-2))[:menu_width-1] + "*"
 
