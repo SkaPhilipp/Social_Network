@@ -22,7 +22,7 @@ def display_menu():
     def string_wrapping(input_string):
         return ("*" + indent + input_string + " "*(menu_width-2))[:menu_width-1] + "*"
 
-    # Print menu options
+    # Print menu options 
     print(row_of_stars)
     print(blank_line)
     print(string_wrapping("Enter option to choose:"))
