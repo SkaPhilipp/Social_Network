@@ -6,7 +6,7 @@ from time import sleep
 import random
 import string
 
-import webbrowser 
+import webbrowser
 
 
 
