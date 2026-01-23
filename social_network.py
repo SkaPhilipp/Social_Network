@@ -1,4 +1,4 @@
-import network_graph_database as graph
+import network_graph_database as graph 
 
 from os import system, name
 from time import sleep
